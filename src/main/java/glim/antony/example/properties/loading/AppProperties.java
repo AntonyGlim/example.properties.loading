@@ -11,13 +11,15 @@ import java.util.List;
  * Created at 31.03.2021
  */
 @Data
-@ConfigurationProperties(prefix = "flight.scenario.saver")
+@ConfigurationProperties(prefix = "example.properties")
 public class AppProperties {
 
-    private String RABBIT_MQ_USER;
+    private String user;
 
-    private String RABBIT_MQ_PASS;
+    private String password;
 
-    private List<String> DOC_SERVERS_DESCRIPTION;
+    private String salt;
+
+    private List<String> description;
 
 }

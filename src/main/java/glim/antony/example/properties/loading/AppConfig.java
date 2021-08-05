@@ -15,12 +15,19 @@ import javax.annotation.PostConstruct;
 @Configuration
 public class AppConfig {
 
-    @Value("${flight.scenario.saver.RABBIT_MQ_USER}")
+    @Value("${example.properties.user}")
     String user;
+
+    @Value("${example.properties.password}")
+    String password;
+
+    @Value("${example.properties.salt:DEFAULT}")
+    String salt;
+
 
     @PostConstruct
     public void init() {
-        log.info("{}", user);
+        log.info("AppConfig.class: user: {}, password: {}, salt: {}", user, password, salt);
     }
 
 }

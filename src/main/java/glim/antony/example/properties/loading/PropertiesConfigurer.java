@@ -21,7 +21,8 @@ public class PropertiesConfigurer {
     private static final String LOGGER_CONFIG_FILE_NAME = "logback.xml";
     private static final String APPLICATION_PROPERTIES_FILE_NAME = "application.properties";
     private static final String[] FOLDERS_FROM_ROOT = new String[]{"conf", "example", "properties"};
-    private static final String SPRING_CONFIG_LOCATION_ARGUMENT_NAME = "spring.config.location";
+    private static final String SPRING_CONFIG_LOCATION_ARGUMENT_NAME = "spring.config.location"; //this properties will be rewrite
+    private static final String SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME = "spring.config.additional-location"; // this is general properties
 
     /**
      * @return example: C:\example.properties.loading\conf\example\properties\logback.xml
@@ -31,19 +32,32 @@ public class PropertiesConfigurer {
     }
 
     /**
-     * If command line arguments no contains ${SPRING_CONFIG_LOCATION_ARGUMENT_NAME} argument,
+     * If command line arguments no contains ${SPRING_CONFIG_LOCATION_ARGUMENT_NAME} argument
+     * and ${SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME} argument,
      * method find custom ${FILE_NAME} file location
      * and add argument to command line arguments
      *
      * @param args - command line arguments
-     * @return copy of @param args with extra ${SPRING_CONFIG_LOCATION_ARGUMENT_NAME} argument
+     * @return copy of @param args with extra ${SPRING_CONFIG_LOCATION_ARGUMENT_NAME}
+     * and ${SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME} arguments
      */
     public static String[] addSpringConfigLocationArgumentIfNotPresent(String[] args) {
         if (args == null) args = new String[]{};
-        if (args.length == 0 || !contains(args, SPRING_CONFIG_LOCATION_ARGUMENT_NAME)) {
-            args = Arrays.copyOf(args, args.length + 1);
-            args[args.length - 1] = "--" + SPRING_CONFIG_LOCATION_ARGUMENT_NAME + "=" + findPropertiesFileLocation(APPLICATION_PROPERTIES_FILE_NAME, FOLDERS_FROM_ROOT);
+        if (!contains(args, SPRING_CONFIG_LOCATION_ARGUMENT_NAME)) {
+            args = copyArrayAndAddExtraArgument(args, "--" + SPRING_CONFIG_LOCATION_ARGUMENT_NAME
+                    + "=classpath:" + APPLICATION_PROPERTIES_FILE_NAME);
         }
+        if (!contains(args, SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME)) {
+            args = copyArrayAndAddExtraArgument(args, "--" + SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME
+                    + "=file:" + findPropertiesFileLocation(APPLICATION_PROPERTIES_FILE_NAME, FOLDERS_FROM_ROOT));
+        }
+        return args;
+    }
+
+    private static String[] copyArrayAndAddExtraArgument(String[] args, String argument) {
+        args = Arrays.copyOf(args, args.length + 1);
+        args[args.length - 1] = argument;
+        log.info("Add command line argument {}", argument);
         return args;
     }
 

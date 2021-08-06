@@ -1,4 +1,4 @@
-package glim.antony.example.properties.loading;
+package glim.antony.example.properties.loading.conf;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

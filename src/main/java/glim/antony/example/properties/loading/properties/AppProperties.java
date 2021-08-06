@@ -1,4 +1,4 @@
-package glim.antony.example.properties.loading;
+package glim.antony.example.properties.loading.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

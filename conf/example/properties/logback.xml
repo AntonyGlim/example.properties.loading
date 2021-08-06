@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="MY__PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} |L| %-5level | %-20.20thread | %-20.20class | %-25.25method | %-4.4line | %message%n%rEx"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${MY__PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

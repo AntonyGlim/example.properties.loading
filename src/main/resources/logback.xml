@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <property name="LOG__HOME" value="${user.dir}//logs//example//properties"/>
+    <property name="MY__PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} |D| %-5level | %-20.20thread | %-20.20class | %-25.25method | %-4.4line | %message%n%rEx"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG__HOME}//log.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>${MY__PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG__HOME}//archived//log-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- each file should be at most 10MB, keep 180 days worth of history, but at most 2GB -->
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>180</maxHistory>
+            <totalSizeCap>2048MB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

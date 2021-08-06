@@ -1,4 +1,4 @@
-package glim.antony.example.properties.loading;
+package glim.antony.example.properties.loading.properties;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -11,6 +11,10 @@ import java.util.Objects;
  *
  * @author a.yatsenko
  * Created at 05.08.2021
+ *
+ * if you wont to set custom properties location,
+ * just set "--spring.config.additional-location"
+ * as command line argument
  */
 @Slf4j
 public class PropertiesConfigurer {
@@ -18,9 +22,10 @@ public class PropertiesConfigurer {
     private PropertiesConfigurer() {
     }
 
+    private static final String[] FOLDERS_FROM_ROOT = new String[]{"conf", "example", "properties"};
+
     private static final String LOGGER_CONFIG_FILE_NAME = "logback.xml";
     private static final String APPLICATION_PROPERTIES_FILE_NAME = "application.properties";
-    private static final String[] FOLDERS_FROM_ROOT = new String[]{"conf", "example", "properties"};
     private static final String SPRING_CONFIG_LOCATION_ARGUMENT_NAME = "spring.config.location"; //this properties will be rewrite
     private static final String SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME = "spring.config.additional-location"; // this is general properties
 
@@ -48,8 +53,12 @@ public class PropertiesConfigurer {
                     + "=classpath:" + APPLICATION_PROPERTIES_FILE_NAME);
         }
         if (!contains(args, SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME)) {
+            String fileLocation = findPropertiesFileLocation(APPLICATION_PROPERTIES_FILE_NAME, FOLDERS_FROM_ROOT);
+            if (StringUtils.isEmpty(fileLocation) || fileLocation.contains("classpath:" + APPLICATION_PROPERTIES_FILE_NAME)) {
+                return args;
+            }
             args = copyArrayAndAddExtraArgument(args, "--" + SPRING_CONFIG_ADDITIONAL_LOCATION_ARGUMENT_NAME
-                    + "=file:" + findPropertiesFileLocation(APPLICATION_PROPERTIES_FILE_NAME, FOLDERS_FROM_ROOT));
+                    + "=file:" + fileLocation);
         }
         return args;
     }
